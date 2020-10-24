@@ -1,0 +1,64 @@
+
+include("common_objects.inc");
+
+// prevent jerky display, at the cost of power/CPU consumption
+core.setMinFps(2000);
+core.clear();
+GridLinesMgr.setFlagEquatorGrid(false);
+core.setGuiVisible(false);
+id = LabelMgr.labelScreen("Press Ctrl+T to un-hide the toolbar", 100,100, false, 20);
+LabelMgr.setLabelShow(id, true);
+LabelMgr.setLabelShow(id, false);
+LabelMgr.deleteLabel(id);
+ConstellationMgr.setFlagIsolateSelected(true);
+core.setTimeRate(0);
+
+var time = core.getJDay();
+var second = 0.00001157407;
+var interval = 1800; //30 min intervals
+
+//manually turn off meteor showers
+
+SporadicMeteorMgr.setFlagShow(false);
+LandscapeMgr.setFlagAtmosphere(false);
+LandscapeMgr.setFlagLandscape(false);
+//core.debug(LandscapeMgr.getAtmosphereAverageLuminance());
+//LandscapeMgr.setAtmosphereAverageLuminance(0.009013357490301132);
+StarMgr.setFlagStars(false);
+
+//sun, moon, then planets in order
+var solar_obj_ind = [0, 3, 1, 2, 4, 7, 12, 21, 27]
+//var out = StelScriptOutput.init("test.log");
+
+var obs = core.getObserverLocationInfo();
+core.output(obs["altitude"] + " " + obs["longitude"] + " " + obs["latitude"]);
+
+core.wait(2);
+
+for (k = 0; k < 50; k++)
+{
+	core.setJDay(time);
+	time += second * interval;
+	core.wait(1);
+	core.screenshot("stellarium_ss-", false, "D:/Stellarium/screenshots");
+
+	core.output(core.getJDay());
+
+	for (i = 0; i < solar_obj_ind.length; i++) {
+		var planet = planets[solar_obj_ind[i]];
+		var info = core.getObjectInfo(planet);
+		// if (!info["above-horizon"]) {
+		// 	continue;
+		// }
+
+		var xy = core.getScreenXYFromAltAzi(info.altitude, info.azimuth);
+
+		core.output(planet + " " + xy.x + " " + xy.y);
+
+	}
+	core.output("\n");
+}
+
+
+
+
