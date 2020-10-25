@@ -61,6 +61,10 @@ def load_metadata(filename):
 	with open(filename) as f:
 		location_data = f.readline()
 		metadata_dict['location'] = location_data.rstrip()
+
+		fov = f.readline()
+		metadata_dict['fov'] = fov
+
 		metadata_dict['image_data'] = []
 
 		start_pattern = re.compile(r"^\d+.\d+")
@@ -159,11 +163,23 @@ def load_images_generate_bitmasks(datapath, outputpath, metadata, prefix='stella
 		save_data(idx, outputpath, metadata['image_data'][idx]['jday'], image, bit_mask_image, bit_mask_visible_image, bit_mask_indexed_image, bit_mask_indexed_visible_image, planet_lst)
 		idx += 1
 
-def save_location_data(output_path, location_data):
-	output_file = os.path.join(output_path, 'location.txt')
+def get_orig_res(datapath, prefix='stellarium_ss-'):
+	assert(os.path.isdir(datapath))
+
+	images = [img for img in os.listdir(datapath) if ('.png' in img and prefix in img)]
+	img = cv2.imread(os.path.join(datapath, images[0]))
+	return img.shape
+
+
+def save_metadata(output_path, location_data, fov, metadata_orig_res):
+	output_file = os.path.join(output_path, 'metadata.txt')
 	with open(output_file, 'w') as f:
-		f.write('altitude, longitude, latitude')
-		f.write(location_data)
+		f.write('altitude, longitude, latitude\n')
+		f.write(location_data + '\n')
+		f.write('fov\n')
+		f.write(fov)
+		f.write('(y, x, channels)\n')
+		f.write(str(metadata_orig_res))
 
 def generate_output_folders(output_path):
 	if not os.path.isdir(os.path.join(output_path, 'timestamp')):
@@ -199,7 +215,8 @@ def main():
 	metadata_filename = os.path.join(DATA_PATH, 'output.txt')
 	metadata = load_metadata(metadata_filename)
 
-	save_location_data(OUTPUT_PATH, metadata['location'])
+	metadata_orig_res = get_orig_res(DATA_PATH)
+	save_metadata(OUTPUT_PATH, metadata['location'], metadata['fov'], metadata_orig_res)
 	generate_output_folders(OUTPUT_PATH)
 
 	load_images_generate_bitmasks(DATA_PATH, OUTPUT_PATH, metadata)

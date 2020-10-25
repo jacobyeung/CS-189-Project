@@ -32,6 +32,7 @@ var solar_obj_ind = [0, 3, 1, 2, 4, 7, 12, 21, 27]
 
 var obs = core.getObserverLocationInfo();
 core.output(obs["altitude"] + " " + obs["longitude"] + " " + obs["latitude"]);
+core.output(StelMovementMgr.getCurrentFov());
 
 core.wait(2);
 
@@ -40,7 +41,7 @@ for (k = 0; k < 50; k++)
 	core.setJDay(time);
 	time += second * interval;
 	core.wait(1);
-	core.screenshot("stellarium_ss-", false, "D:/Stellarium/screenshots");
+	core.screenshot("stellarium_ss-", false, "D:/Stellarium/screenshots/image_data");
 
 	core.output(core.getJDay());
 
