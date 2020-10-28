@@ -19,16 +19,18 @@ class CNN(nn.Module):
             nn.ReLU()
         )
 
-        self.lin_layer = nn.Sequential(
-            nn.Linear(800, 800)  # B, 32, 5, 320
+        self.rec_layer = nn.Sequential(
+            nn.LSTM(800, 100, num_layers=2, batch_first=True)
+
         )
+        self.lin_layer = nn.Linear(100, 800)  # B, 32, 5, 320
 
         self.upsize_layer = nn.Sequential(
             nn.ConvTranspose2d(32, 32, 3, stride=3, padding=1),
             nn.ReLU(),
             nn.ConvTranspose2d(32, 32, 4, stride=3, padding=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 1, 6, stride=4, padding=1),
+            nn.ConvTranspose2d(32, 1, 6, stride=4, padding=1)
         )
 
     def downsize(self, x):
@@ -36,6 +38,8 @@ class CNN(nn.Module):
         return x
 
     def linear(self, x):
+        x, hs = self.rec_layer(x)
+        x = x.view(-1, 100)
         x = self.lin_layer(x)
         return x
 
@@ -45,7 +49,8 @@ class CNN(nn.Module):
 
     def forward(self, x):
         x = self.downsize(x)
-        x = x.view(-1, 5 * 5 * 32)
+        # x = x.view(-1, 5 * 5 * 32)
+        x = x.view(-1, 1, 800)
         x = self.linear(x)
         x = x.view(-1, 32, 5, 5)
         x = self.upsize(x)
