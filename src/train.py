@@ -41,7 +41,7 @@ def validate(model, dataloader, epoch, fpath, len_val_set):
             loss = model.loss(data, recon)
             running_loss += loss.item()
             if i == 0:
-                num_rows = min(data.size(0), 9)
+                num_rows = max(dataloader.batch_size, 9)
                 both = torch.cat((data.view(num_rows, 1, 144, 144)[:5],
                                   recon.view(num_rows, 1, 144, 144)[:5]))
                 save_image(both.cpu(), "outputs/" +
