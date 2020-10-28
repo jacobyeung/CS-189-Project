@@ -31,20 +31,20 @@ def save_data(idx, outputpath, jday, image, bit_mask_image, bit_mask_visible_ima
 	with open(out1, 'w') as f:
 		f.write(jday)
 
-	out2 = os.path.join(outputpath, 'image', str(idx) + '.png')
-	cv2.imwrite(out2, image)
+	out2 = os.path.join(outputpath, 'image', str(idx) + '.npz')
+	np.savez(out2, data=image)
 
-	out3 = os.path.join(outputpath, 'object_bit_mask', str(idx) + '.png')
-	cv2.imwrite(out3, bit_mask_image * 255)
+	out3 = os.path.join(outputpath, 'object_bit_mask', str(idx) + '.npz')
+	np.savez(out3, data=bit_mask_image)
 
-	out4 = os.path.join(outputpath, 'object_visible_bit_mask', str(idx) + '.png')
-	cv2.imwrite(out4, bit_mask_visible_image * 255)
+	out4 = os.path.join(outputpath, 'object_visible_bit_mask', str(idx) + '.npz')
+	np.savez(out4, data=bit_mask_visible_image)
 
-	out5 = os.path.join(outputpath, 'object_indexed_mask', str(idx) + '.png')
-	cv2.imwrite(out5, bit_mask_indexed_image)
+	out5 = os.path.join(outputpath, 'object_indexed_mask', str(idx) + '.npz')
+	np.savez(out5, data=bit_mask_indexed_image)
 
-	out6 = os.path.join(outputpath, 'object_indexed_visible_mask', str(idx) + '.png')
-	cv2.imwrite(out6, bit_mask_indexed_visible_image)
+	out6 = os.path.join(outputpath, 'object_indexed_visible_mask', str(idx) + '.npz')
+	np.savez(out6, data=bit_mask_indexed_visible_image)
 
 	out7 = os.path.join(outputpath, 'object_index_names', str(idx) + '.txt')
 	with open(out7, 'w') as f:
