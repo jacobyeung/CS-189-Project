@@ -88,7 +88,7 @@ fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
 
-    root = "output/" + fpath + ".npz"
+    root = "combined_data_matrix/" + fpath + ".npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
@@ -132,4 +132,4 @@ for fpath in fpaths:
         print("Val Loss: " + str(val_loss))
     np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
-    visualize(fpath, epochs, t_losses, v_losses)
+    visualize(fpath, epochs, t_losses.numpy(), v_losses.numpy())
