@@ -41,7 +41,7 @@ def validate(model, dataloader, epoch, fpath, len_val_set):
             loss = model.loss(data, recon)
             running_loss += loss.item()
             if i == 0:
-                num_rows = max(dataloader.batch_size, 9)
+                num_rows = min(data.size(0), dataloader.batch_size)
                 both = torch.cat((data.view(num_rows, 1, 144, 144)[:5],
                                   recon.view(num_rows, 1, 144, 144)[:5]))
                 save_image(both.cpu(), "outputs/" +
@@ -78,7 +78,7 @@ class CustomDataset(Dataset):
         return self.data.size(0)
 
 
-epochs = 40
+epochs = 15
 lr = 0.005
 batch_size = 32
 
@@ -133,4 +133,3 @@ for fpath in fpaths:
     np.savez(fpath, train_loss=train_loss, val_loss=val_loss)
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
     visualize(fpath, epochs, t_losses, v_losses)
-    break
