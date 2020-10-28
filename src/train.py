@@ -45,7 +45,7 @@ def validate(model, dataloader, epoch, fpath, len_val_set):
                 both = torch.cat((data.view(num_rows, 1, 144, 144)[:5],
                                   recon.view(num_rows, 1, 144, 144)[:5]))
                 save_image(both.cpu(), "outputs/" +
-                           fpath + "/" + str(epoch) + ".png")
+                           fpath + "/" + str(epoch) + ".png", nrow=5)
     return running_loss / len_val_set
 
 
@@ -89,7 +89,6 @@ for fpath in fpaths:
     path_maker(fpath)
 
     root = "combined_data_matrix/" + fpath + ".npz"
-    # root = "outputs/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
@@ -120,19 +119,17 @@ for fpath in fpaths:
     print(torch.cuda.is_available())
 
     model = CNN().to(device)
-    model = torch.hub.load('pytorch/vision:v0.6.0',
-                           'vgg11', pretrained=True).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     t_losses = torch.tensor([0] * epochs)
     v_losses = torch.tensor([0] * epochs)
     for epoch in range(epochs):
-        # train_loss = train(model, train_loader, epoch, len_train_set)
+        train_loss = train(model, train_loader, epoch, len_train_set)
         val_loss = validate(model, val_loader, epoch, fpath, len_val_set)
-        # t_losses[epoch] = train_loss
+        t_losses[epoch] = train_loss
         v_losses[epoch] = val_loss
-        # print("Train Loss: " + str(train_loss))
+        print("Train Loss: " + str(train_loss))
         print("Val Loss: " + str(val_loss))
-    # np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
+    np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
     visualize(fpath, epochs, t_losses.numpy(), v_losses.numpy())
