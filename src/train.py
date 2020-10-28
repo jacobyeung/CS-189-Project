@@ -130,6 +130,6 @@ for fpath in fpaths:
         v_losses[epoch] = val_loss
         print("Train Loss: " + str(train_loss))
         print("Val Loss: " + str(val_loss))
-    np.savez(fpath, train_loss=train_loss, val_loss=val_loss)
+    np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
     visualize(fpath, epochs, t_losses, v_losses)
