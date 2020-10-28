@@ -28,7 +28,7 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.ConvTranspose2d(32, 32, 4, stride=3, padding=2),
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 32, 6, stride=4, padding=1),
+            nn.ConvTranspose2d(32, 1, 6, stride=4, padding=1),
         )
 
     def downsize(self, x):
@@ -55,6 +55,6 @@ class CNN(nn.Module):
         return x
 
     def loss(self, x, reconstruction):
-        criterion = nn.BCEWithLogitsLoss(reudction='mean')
+        criterion = nn.BCEWithLogitsLoss(reduction='sum')
         bce_loss = criterion(reconstruction, x)
         return bce_loss
