@@ -1,4 +1,0 @@
-1 Venus
-2 Mars
-3 Uranus
-4 Neptune

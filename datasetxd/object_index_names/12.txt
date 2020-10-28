@@ -1,5 +1,0 @@
-1 Sun
-2 Mercury
-3 Venus
-4 Mars
-5 Uranus

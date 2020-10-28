@@ -1,7 +1,0 @@
-1 Moon
-2 Mercury
-3 Mars
-4 Jupiter
-5 Saturn
-6 Uranus
-7 Neptune

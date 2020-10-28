@@ -1,1 +1,0 @@
-altitude, longitude, latitude0 -122.02890014648438 37.53369903564453
