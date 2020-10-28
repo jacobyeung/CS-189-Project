@@ -5,22 +5,19 @@ import cv2
 PLANET_LIST = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn']
 RES = (144, 144)
 
-def save_data_matrix(output_dict, output_dir):
+def save_data_matrix(planet, output_masks, output_dir):
 
 	if not os.path.isdir(output_dir):
 		os.mkdir(output_dir)
 
-	for key, val in output_dict.items():
-		output_filename = os.path.join(output_dir, key + '.npz')
-		np.savez(output_filename, data=np.array(val))
+	output_filename = os.path.join(output_dir, planet + '.npz')
+	np.savez(output_filename, data=np.array(output_masks))
 
 
-def create_data_matrix_planets(mask_directory, output_dir='output'):
+def create_data_matrix_planets(planet, mask_directory, output_dir='output'):
 	idx = 0
 
-	output_dict = {}
-	for name in PLANET_LIST:
-		output_dict[name] = []
+	output_masks = []
 
 	assert(os.path.exists(mask_directory))
 
@@ -30,17 +27,16 @@ def create_data_matrix_planets(mask_directory, output_dir='output'):
 			print('done at %s image' % str(idx))
 			break
 
-		for planet in PLANET_LIST:
-			image_path = os.path.join(image_dir, planet + '.png')
-			if os.path.exists(image_path):
-				image_data = cv2.imread(image_path, cv2.IMREAD_UNCHANGED).flatten() / 255.
-				output_dict[planet].append(image_data)
-			else:
-				output_dict[planet].append(np.zeros(RES).flatten())
+		image_path = os.path.join(image_dir, planet + '.png')
+		if os.path.exists(image_path):
+			image_data = cv2.imread(image_path, cv2.IMREAD_UNCHANGED).flatten().astype(dtype=bool)
+			output_masks.append(image_data)
+		else:
+			output_masks.append(np.zeros(RES).flatten())
 
 		idx += 1
 
-	save_data_matrix(output_dict, output_dir)
+	save_data_matrix(planet, output_masks, output_dir)
 
 
 def main():
@@ -50,8 +46,9 @@ def main():
 	args = parser.parse_args()
 
 	assert(args.mask_path)
-
-	create_data_matrix_planets(args.mask_path, args.output_path)
+	for planet in PLANET_LIST:
+		create_data_matrix_planets(planet, args.mask_path, args.output_path)
+		print('finished with planet %s' % planet)
 
 
 if __name__ == '__main__':
