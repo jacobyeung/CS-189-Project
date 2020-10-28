@@ -25,10 +25,6 @@ def create_data_matrix_planets(mask_directory, output_dir='output'):
 	assert(os.path.exists(mask_directory))
 
 	while True:
-
-		if idx == 10:
-			break
-
 		image_dir = os.path.join(mask_directory, str(idx) + '_images')
 		if not os.path.isdir(image_dir):
 			print('done at %s image' % str(idx))
