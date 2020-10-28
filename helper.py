@@ -1,6 +1,7 @@
 import numpy as np
 import argparse, os, sys
 import cv2
+from scipy import ndimage
 
 PLANET_LIST = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn']
 RES = (144, 144)
@@ -32,7 +33,35 @@ def create_data_matrix_planets(planet, mask_directory, output_dir='output'):
 			image_data = cv2.imread(image_path, cv2.IMREAD_UNCHANGED).flatten().astype(dtype=bool)
 			output_masks.append(image_data)
 		else:
-			output_masks.append(np.zeros(RES).flatten())
+			output_masks.append(np.zeros(RES).flatten().astype(dtype=bool))
+
+		idx += 1
+
+	save_data_matrix(planet, output_masks, output_dir)
+
+def create_data_matrix_planets_expanded(planet, mask_directory, output_dir='output', expand_amount=4,):
+	idx = 0
+
+	k = np.ones((2 * expand_amount + 1, 2 * expand_amount + 1))
+
+	output_masks = []
+
+	assert(os.path.exists(mask_directory))
+
+	while True:
+		image_dir = os.path.join(mask_directory, str(idx) + '_images')
+		if not os.path.isdir(image_dir):
+			print('done at %s image' % str(idx))
+			break
+
+		image_path = os.path.join(image_dir, planet + '.png')
+		if os.path.exists(image_path):
+			#.flatten().astype(dtype=bool)
+			image_data = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+			mask = ndimage.convolve(image_data, k, mode='constant', cval=0.0)
+			output_masks.append(mask.flatten().astype(dtype=bool))
+		else:
+			output_masks.append(np.zeros(RES).flatten().astype(dtype=bool))
 
 		idx += 1
 
@@ -47,7 +76,7 @@ def main():
 
 	assert(args.mask_path)
 	for planet in PLANET_LIST:
-		create_data_matrix_planets(planet, args.mask_path, args.output_path)
+		create_data_matrix_planets_expanded(planet, args.mask_path, args.output_path)
 		print('finished with planet %s' % planet)
 
 
