@@ -15,7 +15,7 @@ core.setTimeRate(0);
 
 var time = core.getJDay();
 var second = 0.00001157407;
-var interval = 1800; //30 min intervals
+var interval = 60; //30 min intervals
 
 //manually turn off meteor showers
 
@@ -36,14 +36,16 @@ core.output(StelMovementMgr.getCurrentFov());
 
 core.wait(2);
 
-for (k = 0; k < 50; k++)
+var outp = "";
+
+for (k = 0; k < 25000; k++)
 {
 	core.setJDay(time);
 	time += second * interval;
-	core.wait(1);
-	core.screenshot("stellarium_ss-", false, "/Users/jacobyeung/Berkeley/Fall\ 2020/CS\ 189/CS-189-Project/screenshots/image_data");
+	core.wait(0);
+	core.screenshot("stellarium_ss-", false, "E:\cs189images_try6");
 
-	core.output(core.getJDay());
+	outp += "" + core.getJDay() + "\n";
 
 	for (i = 0; i < solar_obj_ind.length; i++) {
 		var planet = planets[solar_obj_ind[i]];
@@ -54,12 +56,9 @@ for (k = 0; k < 50; k++)
 
 		var xy = core.getScreenXYFromAltAzi(info.altitude, info.azimuth);
 
-		core.output(planet + " " + xy.x + " " + xy.y);
+		outp += "" + planet + " " + xy.x + " " + xy.y + "\n";
 
 	}
-	core.output("\n");
+	outp += "\n";
 }
-
-
-
-
+core.output  (outp);

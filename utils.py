@@ -2,12 +2,12 @@ from collections import deque
 import numpy as np
 
 #checkign for visibility
-VISIBLE_THRESHOLD = np.linalg.norm(np.array([40, 40, 40]))
+VISIBLE_THRESHOLD = np.linalg.norm(np.array([20, 20, 20]))
 
 
 #performs floodfill cuz cv2.floodfill is bad
 #sets flooded to elements to value
-def flood_fill_bit_vis(seed_loc, image, value, thresh = 0.03):
+def flood_fill_bit_vis(seed_loc, image, value, thresh = 0.02):
 
 	mask = np.zeros((image.shape[0], image.shape[1]))
 	mask_visible = np.zeros((image.shape[0], image.shape[1]))
