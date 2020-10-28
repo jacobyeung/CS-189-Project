@@ -44,13 +44,10 @@ class CNN(nn.Module):
         return x
 
     def forward(self, x):
-        print(x.shape)
         x = self.downsize(x)
-        print(x.shape)
         x = x.view(-1, 5 * 5 * 32)
         x = self.linear(x)
         x = x.view(-1, 32, 5, 5)
-        print(x.shape)
         x = self.upsize(x)
         return x
 

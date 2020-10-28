@@ -65,28 +65,6 @@ def visualize(fpath, n_samples, train_loss, val_loss):
     figure.savefig(fpath + " Loss Visualization.png")
 
 
-"""Start of training script"""
-# Hyperparameters
-fpath = "Jupiter"
-path_maker(fpath)
-epochs = 40
-lr = 0.005
-batch_size = 32
-
-
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-print(torch.cuda.is_available())
-
-model = CNN().to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-
-root = "output/Jupiter.npz"
-data = np.load(root)
-data = data['data']
-data = torch.from_numpy(data).float()
-total_len = len(data)
-
-
 class CustomDataset(Dataset):
     """Planets Dataset"""
 
@@ -100,37 +78,59 @@ class CustomDataset(Dataset):
         return self.data.size(0)
 
 
-dataset = CustomDataset(data)
-train_set, val_set = random_split(
-    dataset, [int(0.95 * total_len), int(0.05 * total_len)])
+epochs = 40
+lr = 0.005
+batch_size = 32
 
-print(total_len)
+"""Start of training script"""
+# Hyperparameters
+fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
+for fpath in fpaths:
+    path_maker(fpath)
 
-len_train_set = len(train_set)
-len_val_set = len(val_set)
+    root = "output/" + fpath + ".npz"
+    data = np.load(root)
+    data = data['data']
+    data = torch.from_numpy(data).float()
 
-train_loader = DataLoader(
-    train_set,
-    batch_size=batch_size,
-    shuffle=True
-)
+    dataset = CustomDataset(data)
+    total_len = len(data)
 
-val_loader = DataLoader(
-    val_set,
-    batch_size=batch_size,
-    shuffle=False
-)
+    train_set, val_set = random_split(
+        dataset, [int(0.95 * total_len), int(0.05 * total_len)])
+    print(total_len)
 
+    len_train_set = len(train_set)
+    len_val_set = len(val_set)
 
-t_losses = torch.tensor([0] * epochs)
-v_losses = torch.tensor([0] * epochs)
-for epoch in range(epochs):
-    train_loss = train(model, train_loader, epoch, len_train_set)
-    val_loss = validate(model, val_loader, epoch, fpath, len_val_set)
-    t_losses[epoch] = train_loss
-    v_losses[epoch] = val_loss
-    print("Train Loss: " + str(train_loss))
-    print("Val Loss: " + str(val_loss))
-np.savez(fpath, train_loss=train_loss, val_loss=val_loss)
-torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
-visualize(fpath, epochs, t_losses, v_losses)
+    train_loader = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        val_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    print(torch.cuda.is_available())
+
+    model = CNN().to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+
+    t_losses = torch.tensor([0] * epochs)
+    v_losses = torch.tensor([0] * epochs)
+    for epoch in range(epochs):
+        train_loss = train(model, train_loader, epoch, len_train_set)
+        val_loss = validate(model, val_loader, epoch, fpath, len_val_set)
+        t_losses[epoch] = train_loss
+        v_losses[epoch] = val_loss
+        print("Train Loss: " + str(train_loss))
+        print("Val Loss: " + str(val_loss))
+    np.savez(fpath, train_loss=train_loss, val_loss=val_loss)
+    torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
+    visualize(fpath, epochs, t_losses, v_losses)
+    break
