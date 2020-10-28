@@ -2,21 +2,16 @@
 takes in images + output.txt metadata
 outputs ->
 folders:
-	loc.txt, observer location 
+	metadata.txt, observer location / fov / original image dimensions
 	folder1: timestamp
 		###.txt, timestamp
 	folder2: image
 		###.png, new res image
 	folder3: object_bit_mask
 		###.png, object bit mask * 255 (show up as white)
-	folder4: object_visible_bit_mask
-		###.png, object visible bit mask * 255 (show up as white)
-	folder5: object_indexed_mask
-		###.png, object bit mask, but key-d (0 -> no object, 1 -> )
-	folder6: object_indexed_visible_mask
-		###.png, object bit visible mask, but key-d (0 -> no object, 1 -> )
-	folder7: object_index_names
-		###.txt, #: name, #: name
+	folder4: object_indexed_mask
+		###_images/
+			<planet>.png, individual bit mask for the planet, floodfilled but doesn't floodfill if behind brighter object
 
 """
 
@@ -25,31 +20,28 @@ import cv2, os, re, argparse
 import numpy as np
 from utils import *
 
-def save_data(idx, outputpath, jday, image, bit_mask_image, bit_mask_visible_image, bit_mask_indexed_image, bit_mask_indexed_visible_image, planet_lst):
+def save_data(idx, outputpath, jday, image, bit_mask_image, planet_lst, planet_masks):
 	out1 = os.path.join(outputpath, 'timestamp', str(idx) + '.txt')
 
 	with open(out1, 'w') as f:
 		f.write(jday)
 
-	out2 = os.path.join(outputpath, 'image', str(idx) + '.npz')
-	np.savez(out2, data=image)
+	out2 = os.path.join(outputpath, 'image', str(idx) + '.png')
+	cv2.imwrite(out2, image)
 
-	out3 = os.path.join(outputpath, 'object_bit_mask', str(idx) + '.npz')
-	np.savez(out3, data=bit_mask_image)
+	out3 = os.path.join(outputpath, 'object_bit_mask', str(idx) + '.png')
+	cv2.imwrite(out3, bit_mask_image * 255)
 
-	out4 = os.path.join(outputpath, 'object_visible_bit_mask', str(idx) + '.npz')
-	np.savez(out4, data=bit_mask_visible_image)
+	indexed_mask_dir = os.path.join(outputpath, 'object_indexed_mask', str(idx) + '_images')
+	if not os.path.isdir(indexed_mask_dir):
+		os.mkdir(indexed_mask_dir)
 
-	out5 = os.path.join(outputpath, 'object_indexed_mask', str(idx) + '.npz')
-	np.savez(out5, data=bit_mask_indexed_image)
+	for planet, planet_mask in zip(planet_lst, planet_masks):
 
-	out6 = os.path.join(outputpath, 'object_indexed_visible_mask', str(idx) + '.npz')
-	np.savez(out6, data=bit_mask_indexed_visible_image)
+		out_image_filename = os.path.join(indexed_mask_dir, planet + '.png')
 
-	out7 = os.path.join(outputpath, 'object_index_names', str(idx) + '.txt')
-	with open(out7, 'w') as f:
-		for i, planet in enumerate(planet_lst):
-			f.write(str(i + 1) + ' ' + planet + '\n')
+		cv2.imwrite(out_image_filename, planet_mask * 255)
+
 
 def load_metadata(filename):
 	print(filename)
@@ -125,42 +117,41 @@ def load_images_generate_bitmasks(datapath, outputpath, metadata, prefix='stella
 
 		image, ratio = load_image_and_resize(os.path.join(datapath, image_name), res)
 
-		# cv2.imshow('test', image)
-		# cv2.waitKey(0)
-
 		image_metadata = metadata['image_data'][idx]['planets']
 		image_metadata_rescaled = {}
 		for planet, loc in image_metadata.items():
 			image_metadata_rescaled[planet] = (int(round(loc[0] * 1.0 * ratio[0])), int(round(loc[1] * 1.0 * ratio[1])))
 
 		bit_mask_image = np.zeros((image.shape[0], image.shape[1]), dtype=bool)
-		bit_mask_visible_image = np.zeros((image.shape[0], image.shape[1]), dtype=bool)
 		bit_mask_indexed_image = np.zeros((image.shape[0], image.shape[1]))
-		bit_mask_indexed_visible_image = np.zeros((image.shape[0], image.shape[1]))
+
+		#ordered from brightest to least bright, uranus, neptune ommitted
+		PLANET_LIST = ['Sun', 'Moon', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Mercury']
 
 		planet_idx = 1
 		planet_lst = []
-		for planet, loc in image_metadata_rescaled.items():
+		planet_masks = []
+		for planet in PLANET_LIST:
+			if planet not in image_metadata_rescaled.keys():
+				continue
+
+			loc = image_metadata_rescaled[planet]
 
 			if loc[0] < 0 or loc[0] >= res[0] or loc[1] < 0 or loc[1] >= res[1]:
 				continue
 			else:
-				fill, fill_visible = flood_fill_bit_vis(loc, image, 1)
-				ind_fill, ind_fill_visible = flood_fill_bit_vis(loc, image, planet_idx)
+				fill = flood_fill_bit(loc, image, 1, bit_mask_image)
 				planet_lst.append(planet)
 
 				bit_mask_image = np.logical_or(bit_mask_image, fill)
-				bit_mask_visible_image = np.logical_or(bit_mask_visible_image, fill_visible)
 
-				bit_mask_indexed_image = np.add(bit_mask_indexed_image, ind_fill)
-				bit_mask_indexed_visible_image = np.add(bit_mask_indexed_visible_image, ind_fill_visible)
+				planet_masks.append(fill)
 
 				planet_idx += 1
 		
 		bit_mask_image = bit_mask_image.astype(np.float64)
-		bit_mask_visible_image = bit_mask_visible_image.astype(np.float64)
 
-		save_data(idx, outputpath, metadata['image_data'][idx]['jday'], image, bit_mask_image, bit_mask_visible_image, bit_mask_indexed_image, bit_mask_indexed_visible_image, planet_lst)
+		save_data(idx, outputpath, metadata['image_data'][idx]['jday'], image, bit_mask_image, planet_lst, planet_masks)
 		idx += 1
 
 def get_orig_res(datapath, prefix='stellarium_ss-'):
@@ -188,14 +179,8 @@ def generate_output_folders(output_path):
 		os.mkdir(os.path.join(output_path, 'image'))
 	if not os.path.isdir(os.path.join(output_path, 'object_bit_mask')):
 		os.mkdir(os.path.join(output_path, 'object_bit_mask'))
-	if not os.path.isdir(os.path.join(output_path, 'object_visible_bit_mask')):
-		os.mkdir(os.path.join(output_path, 'object_visible_bit_mask'))
 	if not os.path.isdir(os.path.join(output_path, 'object_indexed_mask')):
 		os.mkdir(os.path.join(output_path, 'object_indexed_mask'))
-	if not os.path.isdir(os.path.join(output_path, 'object_indexed_visible_mask')):
-		os.mkdir(os.path.join(output_path, 'object_indexed_visible_mask'))
-	if not os.path.isdir(os.path.join(output_path, 'object_index_names')):
-		os.mkdir(os.path.join(output_path, 'object_index_names'))
 
 
 def main():
