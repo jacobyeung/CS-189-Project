@@ -80,9 +80,10 @@ print(torch.cuda.is_available())
 model = CNN().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
-root = "output/Jupiter.npz"
+root = "combined_data_matrix/Jupiter.npz"
 data = np.load(root)
-data = data['data']
+data = 1 * data['data']
+
 data = torch.from_numpy(data).float()
 total_len = len(data)
 
