@@ -8,20 +8,24 @@ from pathlib import Path
 from cnn import CNN
 import numpy as np
 import matplotlib.pyplot as plt
+import train
 
 """Functions"""
 torch.manual_seed(42)
 
 
-def train(model, dataloader, epoch, len_train_set):
+def train(model, dataloader, recon_set, epoch, len_train_set):
     model.train()
     running_loss = 0.0
-    for i, data in tqdm(enumerate(dataloader), total=len_train_set/dataloader.batch_size):
+    for i, data in tqdm(enumerate(zip(dataloader, recon_set)), total=len_train_set/dataloader.batch_size):
+        data, recon = data[0], data[1]
         data = data.unsqueeze(1)
+        recon = recon.unsqueeze(1)
         data = data.reshape(-1, 1, 144, 144)
+        recon = recon.reshape(-1, 1, 144, 144).to(device)
         data = data.to(device)
         optimizer.zero_grad()
-        recon = model.forward(data)
+        recon_true = model.forward(data)
         loss = model.loss(data, recon)
         running_loss += loss.item()
         loss.backward()
@@ -29,21 +33,25 @@ def train(model, dataloader, epoch, len_train_set):
     return running_loss / len_train_set
 
 
-def validate(model, dataloader, epoch, fpath, len_val_set):
+def validate(model, dataloader, recon_set, epoch, fpath, len_val_set):
     model.eval()
     running_loss = 0.0
     with torch.no_grad():
-        for i, data in tqdm(enumerate(dataloader), total=len_val_set/dataloader.batch_size):
+        for i, data in tqdm(enumerate(zip(dataloader, recon_set)), total=len_val_set/dataloader.batch_size):
+            data, recon = data[0], data[1]
             data = data.unsqueeze(1)
+            recon = recon.unsqueeze(1)
             data = data.reshape(-1, 1, 144, 144)
+            recon = recon.reshape(-1, 1, 144, 144).to(device)
             data = data.to(device)
-            recon = model.forward(data)
+            optimizer.zero_grad()
+            recon_true = model.forward(data)
             loss = model.loss(data, recon)
             running_loss += loss.item()
             if i == 0:
                 num_rows = min(data.size(0), dataloader.batch_size)
-                both = torch.cat((data.view(num_rows, 1, 144, 144)[:5],
-                                  recon.view(num_rows, 1, 144, 144)[:5]))
+                both = torch.cat((data.view(num_rows, 1, 144, 144)[:5], recon.view(
+                    num_rows, 1, 1414, 144)[:5], recon.view(num_rows, 1, 144, 144)[:5]))
                 save_image(both.cpu(), "outputs/" +
                            fpath + "/" + str(epoch) + ".png")
     return running_loss / len_val_set
@@ -88,12 +96,15 @@ fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
 
-    # root = "combined_data_matrix/" + fpath + ".npz"
-    root = "outputs/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz"
+    root = "combined_data_matrix/" + fpath + ".npz"
+    root_f = "fourier_inputs/" + fpath + ".npz"
+    # root = "outputs/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz"
     data = np.load(root)
     data = data['data']
+    data_f = np.load(root_f)
+    data_f = data_f['data']
     data = torch.from_numpy(data).float()
-
+    data_f = torch.from_numpy(data_f).float()
     dataset = CustomDataset(data)
     total_len = len(data)
 
@@ -116,6 +127,18 @@ for fpath in fpaths:
         shuffle=False
     )
 
+    train_loader_f = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True
+    )
+
+    val_loader_f = DataLoader(
+        val_set,
+        batch_size=batch_size,
+        shuffle=False
+    )
+
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print(torch.cuda.is_available())
 
@@ -127,11 +150,13 @@ for fpath in fpaths:
     t_losses = torch.tensor([0] * epochs)
     v_losses = torch.tensor([0] * epochs)
     for epoch in range(epochs):
-        # train_loss = train(model, train_loader, epoch, len_train_set)
-        val_loss = validate(model, val_loader, epoch, fpath, len_val_set)
-        # t_losses[epoch] = train_loss
+        train_loss = train(model, train_loader_f,
+                           train_loader, epoch, len_train_set)
+        val_loss = validate(model, val_loader_f, val_loader,
+                            epoch, fpath, len_val_set)
+        t_losses[epoch] = train_loss
         v_losses[epoch] = val_loss
-        # print("Train Loss: " + str(train_loss))
+        print("Train Loss: " + str(train_loss))
         print("Val Loss: " + str(val_loss))
     # np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
