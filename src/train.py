@@ -88,8 +88,8 @@ fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
 
-    # root = "combined_data_matrix/" + fpath + ".npz"
-    root = "outputs/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz"
+    root = "combined_data_matrix/" + fpath + ".npz"
+    # root = "outputs/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
@@ -120,8 +120,6 @@ for fpath in fpaths:
     print(torch.cuda.is_available())
 
     model = CNN().to(device)
-    model = torch.hub.load('pytorch/vision:v0.6.0',
-                           'vgg11', pretrained=True).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     t_losses = torch.tensor([0] * epochs)
