@@ -65,6 +65,54 @@ def visualize(fpath, n_samples, train_loss, val_loss):
     figure.savefig(fpath + " Loss Visualization.png")
 
 
+# def traverse(model, h_dim, pixels, file_path, number, low, high, personalized):
+#     with torch.no_grad():
+#         # Input image and change mean, keeping variance the same
+#         if pixels.shape[0] == 10:
+#             pixels = torch.tensor(
+#                 np.reshape([pixels] * 4, (h_dim, 29, 29))).unsqueeze(1).float().to(device)
+#         else:
+#             pixels = torch.tensor(
+#                 [pixels] * h_dim).unsqueeze(1).float().to(device)
+#         x = model.encode(pixels)
+#         mu, logvar = x[:, :h_dim], x[:, h_dim:]
+#         std = torch.exp(0.5 * logvar)
+#         eps = torch.randn_like(std)
+#         actual = False
+#         indices = torch.tensor(np.linspace(low, high, h_dim)).to(device)
+#         image = False
+#         for i in range(len(indices)):
+#             mu_copy = mu.clone()
+#             # for c in range(h_dim // 20):
+#             #     for j in range(20):
+#             #         mu_copy[j + c * 20, j] = indices[i]
+#             step = indices[i]
+#             for j in range(h_dim):
+#                 mu_copy[j, j] = step[j]
+
+#             sample = mu_copy + std * eps
+
+#             sample = model.decode(sample).cpu()
+#             sample = sample.view(-1, 1, 29, 29)
+
+#             kld = torch.abs(
+#                 (-0.5 * (1 + logvar - mu_copy.pow(2) - logvar.exp()).mean(dim=0)))
+#             sorted_kld, indexes = torch.sort(kld, descending=True)
+#             sample = sample[indexes]
+#             if image is False:
+#                 image = sample
+#                 actual, _, _ = model.forward(pixels)
+#                 actual = actual.view(-1, 1, 29, 29)
+#                 pixels = pixels[indexes]
+#                 actual = actual[indexes]
+#             else:
+#                 image = torch.cat((image, sample))
+#         both = torch.cat((pixels.view(-1, 1, 29, 29),
+#                           actual.view(-1, 1, 29, 29),
+#                           image.view(-1, 1, 29, 29).to(device)))
+#         save_image(both.cpu(), file_path + ".png", nrow=h_dim)
+
+
 class CustomDataset(Dataset):
     """Planets Dataset"""
 
@@ -121,15 +169,29 @@ for fpath in fpaths:
     model = CNN().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
-    t_losses = torch.tensor([0] * epochs)
-    v_losses = torch.tensor([0] * epochs)
+    train_total = torch.tensor([0] * (epochs * 5))
+    train_bce = torch.tensor([0] * (epochs * 5)).to(device)
+    train_kld = torch.tensor([0] * (epochs * 5)).to(device)
+    val_total = torch.tensor([0] * (epochs * 5))
+    val_bce = torch.tensor([0] * (epochs * 5)).to(device)
+    val_kld = torch.tensor([0] * (epochs * 5)).to(device)
+
     for epoch in range(epochs):
         train_loss = train(model, train_loader, epoch, len_train_set)
         val_loss = validate(model, val_loader, epoch, fpath, len_val_set)
-        t_losses[epoch] = train_loss
-        v_losses[epoch] = val_loss
+
+        train_total[epoch] = train_epoch_loss
+        train_bce[epoch] = bce_train.detach()
+        train_kld[epoch] = kl_train.detach()
+        val_total[epoch] = val_epoch_loss
+        val_bce[epoch] = bce_val.detach()
+        val_kld[epoch] = kl_val.detach()
+
         print("Train Loss: " + str(train_loss))
         print("Val Loss: " + str(val_loss))
-    np.savez(fpath + "_loss", train_loss=train_loss, val_loss=val_loss)
+    np.savez(fpath + "_loss", train_total=train_total.cpu().numpy(), train_bce=train_bce.cpu().numpy(), train_kld=train_kld.cpu(
+    ).numpy(), val_total=val_total.cpu().numpy(), val_bce=val_bce.cpu().numpy(), val_kld=val_kld.cpu().numpy())
     torch.save(model.state_dict(), "./model_version" + fpath + ".pt")
-    visualize(fpath, epochs, t_losses.numpy(), v_losses.numpy())
+    # visualize(fpath, epochs, t_losses.numpy(), v_losses.numpy())
+    # trav(fpath_no_cv, h_dim, noise=False, low=np.array(
+    #     [-3] * int(h_dim / 2)), high=np.array([3] * int(h_dim / 2)))

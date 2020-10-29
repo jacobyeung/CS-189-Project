@@ -19,12 +19,16 @@ class CNN(nn.Module):
             nn.ReLU()
         )
 
-        self.rec_layer = nn.Sequential(
-            nn.LSTM(800, 100, num_layers=2, batch_first=True)
-
+        self.enclin_layer = nn.Sequential(
+            nn.Linear(800, 400),
+            nn.ReLU(),
+            nn.Linear(400, 20)
         )
-        self.lin_layer = nn.Linear(100, 800)  # B, 32, 5, 320
-
+        self.declin_layer = nn.Sequential(
+            nn.Linear(10, 400),  # B, 32, 5, 320
+            nn.ReLU(),
+            nn.Linear(400, 800)
+        )
         self.upsize_layer = nn.Sequential(
             nn.ConvTranspose2d(32, 32, 3, stride=3, padding=1),
             nn.ReLU(),
@@ -38,25 +42,38 @@ class CNN(nn.Module):
         return x
 
     def linear(self, x):
-        x, hs = self.rec_layer(x)
-        x = x.view(-1, 100)
-        x = self.lin_layer(x)
+        x = self.enclin_layer(x)
         return x
 
     def upsize(self, x):
         x = self.upsize_layer(x)
         return x
 
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        sample = mu + std * eps
+        return sample
+
     def forward(self, x):
         x = self.downsize(x)
-        # x = x.view(-1, 5 * 5 * 32)
-        x = x.view(-1, 1, 800)
+        x = x.view(-1, 5 * 5 * 32)
         x = self.linear(x)
+        mu, logvar = x[:, :x.shape[1] // 2], x[:, x.shape[1] // 2:]
+        sample = self.reparameterize(mu, logvar)
+        x = self.declin_layer(sample)
         x = x.view(-1, 32, 5, 5)
         x = self.upsize(x)
-        return x
+        return x, mu, logvar
 
-    def loss(self, x, reconstruction):
+    def final_loss(self, x, reconstruction, mu, logvar, gamma, C):
         criterion = nn.BCEWithLogitsLoss(reduction='sum')
         bce_loss = criterion(reconstruction, x)
-        return bce_loss
+        kld = gamma * \
+            torch.abs((-0.5 * torch.sum(1 + logvar -
+                                        mu.pow(2) - logvar.exp(), dim=1) - C).mean(dim=0))
+        return bce_loss, kld, bce_loss + kld
+
+
+a = CNN()
+summary(a, (1, 144, 144))
