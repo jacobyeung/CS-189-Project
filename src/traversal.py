@@ -59,7 +59,7 @@ def traverse(model, pixels, file_path):
 
 
 def trav(model_name):
-    model = reimp.ReImp().to(device)
+    model = cnn.CNN.to(device)
     model.load_state_dict(torch.load(
         './model_version/' + model_name + '.pt', map_location=lambda storage, loc: storage))
-    traverse(model, pixels[9], "outputs/traversal/" + model_name)
+    traverse(model, pixels[0], "outputs/traversal/" + model_name)
