@@ -131,19 +131,15 @@ def path_maker(fpath):
 fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
-    root = "new_output/" + fpath + ".npz"
+    root = "output/" + fpath + ".npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
     batch_size = 32
     dataset = CustomDataset(data)
 
-    # train_set, test_set = random_split(
-    #    dataset, [663552, 73728], generator=torch.Generator().manual_seed(42))
     total_len = len(data)
 
-    # train_set, test_set = random_split(
-    #    dataset, [7000, 3000], generator=torch.Generator().manual_seed(42))
     train_set, val_set = random_split(
         dataset, [int(0.95 * total_len), int(0.05 * total_len)])
     print(total_len)
