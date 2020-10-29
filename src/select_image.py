@@ -2,9 +2,8 @@ import numpy as np
 import os
 
 root = os.path.abspath(os.getcwd(
-) + '/dsprites-dataset-master/dsprites_ndarray_co1sh3sc6or40x32y32_64x64.npz')
+) + '/combined_matrix_output/Jupiter.npz')
 data = np.load(root)
-data = data['imgs'][[0, 73728, 147456, 221184, 294912, 36840,
-                     442368, 516096, 589824, 663552]]
+data = data['imgs'][0, 5000, 10000, 15000, 20000, 24999]
 
-np.save(os.path.abspath(os.getcwd() + '/src/image.npy'), data)
+np.save(os.path.abspath(os.getcwd() + '/src/image_jupiter.npy'), data)

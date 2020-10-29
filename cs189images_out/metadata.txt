@@ -1,6 +1,0 @@
-altitude, longitude, latitude
-0 -122.45050048828125 37.477500915527344
-fov
-235
-(y, x, channels)
-(1080, 1920, 3)

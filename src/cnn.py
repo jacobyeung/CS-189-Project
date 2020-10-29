@@ -4,7 +4,7 @@ from torchsummary import summary
 
 
 class CNN(nn.Module):
-    """Convolutional recurrent neural network using LSTM"""
+    """Convolutional Variational Autoencoder"""
 
     def __init__(self):
         super().__init__()
