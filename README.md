@@ -4,8 +4,8 @@ Early project pulls planet traversal images from Stellarium and contains two dat
 Instructions to run:
 Edit collect_data.scc for these things:
 
-1. Screenshot output directory, make sure that folder exists
-2. Number of iterations the code will run for
+1. Screenshot output directory, make sure that folder exists if not make one and change the directory appropriately.
+2. Choose the number of iterations the code will run for.
 
 Instructions
 
