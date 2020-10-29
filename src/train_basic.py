@@ -131,7 +131,7 @@ def path_maker(fpath):
 fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
-    root = "output/" + fpath + ".npz"
+    root = "new_output/" + fpath + ".npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
