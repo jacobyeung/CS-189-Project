@@ -4,7 +4,7 @@ from torchvision.utils import save_image
 import numpy as np
 import os
 import cnn
-root = os.path.abspath(os.getcwd() + '/src/image.npy')
+root = os.path.abspath(os.getcwd() + '/src/image_sample_sun.npy')
 pixels = np.load(root)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -24,7 +24,10 @@ def traverse(model, pixels, file_path):
         else:
             pixels = torch.tensor(
                 [pixels] * 10).unsqueeze(1).float().to(device)
-        x = model.encode(pixels)
+        pixels = pixels.reshape(-1, 1, 144, 144)
+        x = model.downsize(pixels)
+        x = x.view(-1, 5 * 5 * 32)
+        x = model.linear(x)
         mu, logvar = x[:, :10], x[:, 10:]
         std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(std)
@@ -37,29 +40,32 @@ def traverse(model, pixels, file_path):
                 mu_copy[j, j] = indices[i]
             sample = mu_copy + std * eps
 
-            sample = model.decode(sample).cpu()
-            sample = sample.view(-1, 1, 64, 64)
+            sample = model.declin_layer(sample)
+            sample = sample.view(-1, 32, 5, 5)
+            sample = model.upsize(sample).cpu()
+            sample = sample.view(-1, 1, 144, 144)
 
             kld = torch.abs(
                 (-0.5 * (1 + logvar - mu_copy.pow(2) - logvar.exp()).mean(dim=0)))
             sorted_kld, indexes = torch.sort(kld, descending=True)
-            # sample = sample[indexes]
+            sample = sample[indexes]
             if image is False:
                 image = sample
                 actual, _, _ = model.forward(pixels)
-                actual = actual.view(-1, 1, 64, 64)
-                # pixels = pixels[indexes]
-                # actual = actual[indexes]
+                actual = actual.view(-1, 1, 144, 144)
+                pixels = pixels[indexes]
+                actual = actual[indexes]
             else:
                 image = torch.cat((image, sample))
-        both = torch.cat((pixels.view(-1, 1, 64, 64).cpu(),
-                          actual.view(-1, 1, 64, 64).cpu(),
-                          image.view(-1, 1, 64, 64).cpu()))
+        both = torch.cat((pixels.view(-1, 1, 144, 144).cpu(),
+                          actual.view(-1, 1, 144, 144).cpu(),
+                          image.view(-1, 1, 144, 144).cpu()))
         save_image(both.cpu(), file_path + ".png", nrow=10)
 
 
 def trav(model_name):
-    model = cnn.CNN.to(device)
+    model = cnn.CNN().to(device)
     model.load_state_dict(torch.load(
-        './Example_Models/' + model_name + '.pt', map_location=lambda storage, loc: storage))
-    traverse(model, pixels[0], "outputs/traversal/" + model_name)
+        './Example Models/' + model_name + '.pt', map_location=lambda storage, loc: storage))
+    traverse(model, pixels, "Reconstruction Examples/" +
+             model_name + " traversal")
