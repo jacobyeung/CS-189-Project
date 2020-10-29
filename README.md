@@ -21,3 +21,5 @@ Instructions
   - For main.py change the file directory used to your personal directory containing the cleaned.npz files and make sure the data files are in the same directory as main.py
   - Note*** Due to the way numpy stores complex numbers the fourier version of these files takes up a lot of space ~8GB so be warned.
   - The cleaned data in the .npz files can be downloaded from https://drive.google.com/drive/folders/1TFwxn_xk9RVnpkibTUW9kg-ef_b5GC0S?usp=sharing. This data was created using helper.py with a expand argument of 4.
+
+See Early Project Writeup for more details.
