@@ -21,7 +21,7 @@ def fourier_transform(matrix):
 
 def main():
     # Main script to be runned for program
-    file_dir = "C:/Users/Arjun Chandran/Documents/189Project/CS-189-Project/Fourier_transformer/output"
+    file_dir = "C:/Users/zijin/OneDrive/Documents/GitHub/CS-189-Project/src/lost10gbsofspace"
     for i in os.scandir(file_dir):
         name = i.name
         array = read_png(i.path)
