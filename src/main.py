@@ -1,6 +1,5 @@
 import numpy as np
 import os as os
-from PIL import Image
 
 
 def read_png(file):
@@ -11,11 +10,6 @@ def read_png(file):
 
 def fourier_transform(matrix):
     # Converts a numpy matrix into its equivalent fourier featurized matrix
-    #n = matrix.shape[0]
-    #for i in range(0, n):
-    #    matrixi = matrix[i, :].reshape(144, 144)
-    #    matrix[i, :] = np.fft.fft2(matrixi).reshape(1, 20736)
-    #return matrix
     return np.fft.fft2(matrix)
 
 
