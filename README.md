@@ -18,3 +18,4 @@ Instructions
 6. Wait for termination
 7. Navigate to %appdata%/Stellarium, get output.txt, place in same folder as images
 8. Run process.py with --data_path and --output_path set
+9. Run helper.py or src/main.py to augment and featurize the data. Helper.py compiles all the object bit masks into one overall .npz array. src/main.py extracts fourier features from the output of Helper.py.
