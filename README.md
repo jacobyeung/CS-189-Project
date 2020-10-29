@@ -1,7 +1,7 @@
 # CS-189-Project
 Early project pulls planet traversal images from Stellarium and contains two data sets. One is a bit mask of the planet. Another is a raw image dataset. We have also added functionalities to generate fourier and convoluted kernal variants of the data.
-Instructions to run:
 
+Instructions to run:
 Edit collect_data.scc for these things:
 
 1. Screenshot output directory, make sure that folder exists
