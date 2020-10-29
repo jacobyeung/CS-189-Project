@@ -66,14 +66,10 @@ class CNN(nn.Module):
         x = self.upsize(x)
         return x, mu, logvar
 
-    def final_loss(self, x, reconstruction, mu, logvar, gamma, C):
-        criterion = nn.BCEWithLogitsLoss(reduction='sum')
+    def final_loss(self, reconstruction, x, mu, logvar, gamma, C):
+        criterion = nn.BCEWithLogitsLoss(reduction='mean')
         bce_loss = criterion(reconstruction, x)
         kld = gamma * \
-            torch.abs((-0.5 * torch.sum(1 + logvar -
-                                        mu.pow(2) - logvar.exp(), dim=1) - C).mean(dim=0))
+            torch.abs((-0.5 * torch.mean(1 + logvar -
+                                         mu.pow(2) - logvar.exp(), dim=1) - C).mean(dim=0))
         return bce_loss, kld, bce_loss + kld
-
-
-a = CNN()
-summary(a, (1, 144, 144))
