@@ -2,8 +2,9 @@ import numpy as np
 import os
 
 root = os.path.abspath(os.getcwd(
-) + '/combined_matrix_output/Jupiter.npz')
+) + '/combined_matrix_output/Sun.npz')
 data = np.load(root)
-data = data['imgs'][0, 5000, 10000, 15000, 20000, 24999]
+data = data['imgs'][0, 2500, 5000, 7500,
+                    10000, 12500, 15000, 17500, 20000, 22500]
 
-np.save(os.path.abspath(os.getcwd() + '/src/image_jupiter.npy'), data)
+np.save(os.path.abspath(os.getcwd() + '/src/image_sample_sun.npy'), data)

@@ -1,9 +1,9 @@
 import torch
-import reimp
 import torchvision
 from torchvision.utils import save_image
 import numpy as np
 import os
+import cnn
 root = os.path.abspath(os.getcwd() + '/src/image.npy')
 pixels = np.load(root)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -61,5 +61,5 @@ def traverse(model, pixels, file_path):
 def trav(model_name):
     model = cnn.CNN.to(device)
     model.load_state_dict(torch.load(
-        './model_version/' + model_name + '.pt', map_location=lambda storage, loc: storage))
+        './Example_Models/' + model_name + '.pt', map_location=lambda storage, loc: storage))
     traverse(model, pixels[0], "outputs/traversal/" + model_name)
