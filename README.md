@@ -22,7 +22,7 @@ Instructions
 8. Run process.py with --data_path and --output_path set
 9. Run helper.py or src/main.py to augment and featurize the data. Helper.py compiles all the object bit masks into one overall .npz array and has functionality to increase the granularity of the data. src/main.py extracts fourier features from the output of Helper.py.
   - For main.py change the file directory used to your personal directory containing the cleaned.npz files and make sure the data files are in the same directory as main.py
-  - Note*** Due to the way numpy stores complex numbers the fourier version of these files takes up a lot of space ~8GB so be warned.
+  - Note*** Due to the way numpy stores complex numbers the fourier version of these files takes up a lot of space (~8GB per file) so be warned.
   - The cleaned data in the .npz files can be downloaded from https://drive.google.com/drive/folders/1TFwxn_xk9RVnpkibTUW9kg-ef_b5GC0S?usp=sharing. This data was created using helper.py with a expand argument of 4.
 
 See Early Project Writeup for more details.
