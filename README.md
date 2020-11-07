@@ -39,9 +39,9 @@ An example model is included inside this repository, described at the bottom of 
 
 <table style="width: 100%;">
   <tr>
-    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png"></td>
-    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png"></td>
-    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png"></td>
+    <td width="33%"><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png"></td>
+    <td width="33%"><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png"></td>
+    <td width="33%"><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png"></td>
   </tr>
   <tr>
     <td>Raw Image</td>
@@ -55,8 +55,11 @@ Inside `Raw Images/` is an example output from running `src/process.py` on a col
 ## About Our Model
 
 Tutorial - What is a variational autoencoder?: https://jaan.io/what-is-variational-autoencoder-vae-tutorial/
+
 This blog post describes the purpose and construction of variational autoencoders. This helps build intuition for understanding our choice of using the Beta-VAE.
+
 Understanding Disentangling in Beta-VAE: https://arxiv.org/abs/1804.03599
+
 This paper discusses the purpose of adding a beta term in front of the KL divergence term in the loss function of a VAE.
 
 We decided to use a VAE to reconstruct images of the bitmasked data to demonstrate the viability of using our dataset for image to image tasks. We attempted to create smooth and disentangled traversals of the latent distributions as an auxiliary task. (Examples of smooth and disentangled traversals appear in the Understanding Disentangling in Beta-VAE paper.) The Beta-VAE allows us to enforce stricter disentanglement by weighing the KL Divergence term more heavily.
