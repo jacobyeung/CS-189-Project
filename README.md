@@ -29,9 +29,9 @@ Next:
 
 ## The Dataset
 
-| ![Raw dataset image](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png?raw=true>)      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png?raw=true>)       |
+| ![Raw dataset image](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png?raw=true>)      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png?raw=true>)       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png?raw=true>)|
 |:--:|
-|Dataset Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask Images|
+|Raw Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask Images &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object Specific Mask Images(Jupyter)|
 
 ## About Our Model:
 
