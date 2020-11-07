@@ -37,7 +37,7 @@ An example model is included inside this repository, described at the bottom of 
 
 ## The Dataset
 
-<table style="table-layout: fixed ; width: 100%;">
+<table style="width: 100%;">
   <tr>
     <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png"></td>
     <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png"></td>
