@@ -6,6 +6,8 @@ Stellarium download: https://stellarium.org/
 
 ## Instructions
 
+Requirements.txt
+
 Edit src/collect_data.scc for these things:
 
 1. Screenshot output directory, make sure that folder exists if not make one and change the directory appropriately.
@@ -31,9 +33,9 @@ Next:
 
 <table>
   <tr>
-    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png" width="32%"></td>
-    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png" width="32%"></td>
-    <td><img src="ttps://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png" width="32%"></td>
+    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png"></td>
+    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png"></td>
+    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png"></td>
   </tr>
   <tr>
     <td>Raw Image</td>
@@ -42,7 +44,7 @@ Next:
   </tr>
  </table>
 
-## About Our Model:
+## About Our Model
 
 Tutorial - What is a variational autoencoder?: https://jaan.io/what-is-variational-autoencoder-vae-tutorial/
 This blog post describes the purpose and construction of variational autoencoders. This helps build intuition for understanding our choice of using the Beta-VAE.
@@ -53,11 +55,22 @@ We decided to use a VAE to reconstruct images of the bitmasked data to demonstra
 
 Our specific model works for our bitmasked images - 144x144 pixels and greyscale.
 
+### Instructions to Run Model
+
+1. Change fpaths in train_basic.py for planets to train our model on
+2. Run python3 src/train_basic.py
+
 **Reconstruction Example**
-![Sun 25](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun/25.png?raw=true>)  
+
+<p class="aligncenter">
+    <img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun/25.png">  
+</p>
 The images on the top row are the input images; the images on the bottom are the reconstructed images. Each image consists of a white sprite surrounded by black.
 
 **Traversal Example**
-![Sun Traversal](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun traversal.png?raw=true>)  
-The images on the left most column are the inputs; the images on the second to left most column are the reconstructions. The columns afterwards represent a traversal of the latent distribution. We think the traversals could be smoother and more disentangled with hyperparameter tuning and differing model complexities.
+
+<p class="aligncenter">
+    <img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun traversal.png">  
+</p>
+The images on the top most row are the inputs; the images on the second to top most row are the reconstructions. The rows afterwards represent a traversal of the latent distribution. We think the traversals could be smoother and more disentangled with hyperparameter tuning and differing model complexities.  
 See the Early Project Writeup for more details.
