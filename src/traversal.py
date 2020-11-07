@@ -8,14 +8,10 @@ import VAE
 """
 Creates traversal of latent space by linearly changing the mean of latent distributions
 across a preset range of values -3 to 3.
-
-planet: change to name of solar system object
 """
 
-planet = 'sun'
-root = os.path.abspath(os.getcwd() + '/src/image_sample_' + planet + '.npy')
-pixels = np.load(root)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+model = VAE.VAE().to(device)
 
 torch.manual_seed(4321)
 np.random.seed(4321)
@@ -70,7 +66,10 @@ def traverse(model, pixels, file_path):
 
 
 def trav(model_name):
-    model = VAE.VAE().to(device)
+    root = os.path.abspath(
+        os.getcwd() + '/Reconstruction Examples/image_sample_' + model_name + '.npy')
+    pixels = np.load(root)
+
     model.load_state_dict(torch.load(
         './Example Models/' + model_name + '.pt', map_location=lambda storage, loc: storage))
     traverse(model, pixels, "Reconstruction Examples/" +

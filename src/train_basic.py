@@ -115,12 +115,6 @@ def validate(model, dataloader, gamma, c, fpath, epoch, len_val_set):
     return bce, kl, val_loss
 
 
-def append_list_as_row(file_name, list_of_elem):
-    with open(file_name, 'a+') as write_obj:
-        csv_writer = writer(write_obj)
-        csv_writer.writerow(list_of_elem)
-
-
 def path_maker(fpath):
     Path("Reconstruction Examples/" + fpath).mkdir(exist_ok=True)
 

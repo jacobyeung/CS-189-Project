@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 """
-Selects a subset of images to traverse over.
+Selects a subset of images to traverse over and saves in a .npy file in Reconstruction Examples.
 
 planet: change to name of solar system object
 """
@@ -17,4 +17,4 @@ def select_image(planet):
                          10000, 12500, 15000, 17500, 20000, 22500]]
 
     np.save(os.path.abspath(os.getcwd() +
-                            '/src/image_sample_' + planet + '.npy'), data)
+                            '/Reconstruction Examples/image_sample_' + planet + '.npy'), data)
