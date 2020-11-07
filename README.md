@@ -29,14 +29,9 @@ Next:
 
 ## The Dataset
 
-**Raw Image**
-
-
-![alt text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw Images/image/0.png?raw=true>)
-
-**Bit Masked Image**
-
-![alt_text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw Images/object_bit_mask/1.png?raw=true>)
+| ![Raw dataset image](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png?raw=true>)      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png?raw=true>)       |
+|:--:|
+|Dataset Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask |
 
 ## About Our Model:
 
