@@ -105,7 +105,7 @@ def validate(model, dataloader, gamma, c, fpath, epoch, len_val_set):
                 num_rows = min(data.size(0), dataloader.batch_size)
                 both = torch.cat((data.view(num_rows, 1, 144, 144)[:5],
                                   reconstruction.view(num_rows, 1, 144, 144)[:5]))
-                save_image(both.cpu(), "outputs/" + fpath + "/" + str(epoch) + ".png",
+                save_image(both.cpu(), "Reconstruction Examples/" + fpath + "/" + str(epoch) + ".png",
                            nrow=5)
 
     length = len(dataloader.dataset)
