@@ -78,7 +78,7 @@ def create_data_matrix_planets_expanded(planet, mask_directory, output_dir='outp
 def main():
 	parser = argparse.ArgumentParser(description='Convert planet bitmasks to data matrices', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument('--mask_path', action="store", help="Maskpath to read from.")
-	parser.add_argument('--output_path', action="store", default="output", help="Location for output")
+	parser.add_argument('--output_path', action="store", default="combined_data_matrix", help="Location for output")
 	args = parser.parse_args()
 
 	assert(args.mask_path)
