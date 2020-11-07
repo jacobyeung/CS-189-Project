@@ -122,7 +122,7 @@ def append_list_as_row(file_name, list_of_elem):
 
 
 def path_maker(fpath):
-    Path("outputs/" + fpath).mkdir(exist_ok=True)
+    Path("Reconstruction Examples/" + fpath).mkdir(exist_ok=True)
 
 
 """
@@ -136,7 +136,7 @@ fpaths: names of planets to reconstruct
 fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
-    root = "output/" + fpath + ".npz"
+    root = "combined_data_matrix/" + fpath + ".npz"
     data = np.load(root)
     data = data['data']
     data = torch.from_numpy(data).float()
