@@ -84,5 +84,7 @@ The images on the top row are the input images; the images on the bottom are the
     <img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun traversal.png">  
 </div>
 The images on the top most row are the inputs; the images on the second to top most row are the reconstructions. The rows afterwards represent a traversal of the latent distribution. We think the traversals could be smoother and more disentangled with hyperparameter tuning and differing model complexities.
-<br />  
+
+<br />
+
 See the Early Project Writeup for more details.
