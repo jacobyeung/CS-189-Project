@@ -20,7 +20,7 @@ Next:
 5. Run src/collect_data.ssc, close the scripts menu so it doesn't show up in the image
 6. Wait for termination
 7. Navigate to %appdata%/Stellarium, get output.txt, place in same folder as images
-8. Run src/process.py with --data_path and --output_path command line flags
+8. Run src/process.py
 9. Run src/helper.py or src/featurize_fourier.py to augment and featurize the data. src/helper.py compiles all the object bit masks into one overall .npz array and has functionality to increase the granularity of the data. src/featurize_fourier.py extracts fourier features from the output of src/helper.py.
 
 - For src/featurize_fourier.py change the file directory used to your personal directory containing the cleaned.npz files and make sure the data files are in the same directory as src/featurize_fourier.py
