@@ -30,6 +30,8 @@ Next:
 ## Sample Images
 
 **Raw Image**
+
+
 ![alt text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw Images/image/0.png?raw=true>)
 
 ## About Our Model:
