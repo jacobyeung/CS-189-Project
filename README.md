@@ -29,9 +29,18 @@ Next:
 
 ## The Dataset
 
-| ![Raw dataset image](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png?raw=true>)      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png?raw=true>)       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png?raw=true>)|
-|:--:|
-|Raw Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask Images &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object Specific Mask Images (Jupyter)|
+<table>
+  <tr>
+    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png" width="32%"></td>
+    <td><img src="https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png" width="32%"></td>
+    <td><img src="ttps://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_indexed_mask/10000_images/Jupiter.png" width="32%"></td>
+  </tr>
+  <tr>
+    <td>Raw Image</td>
+     <td>Bit Mask Images</td>
+     <td>Object Specific Mask Images (Jupiter)</td>
+  </tr>
+ </table>
 
 ## About Our Model:
 
@@ -45,10 +54,10 @@ We decided to use a VAE to reconstruct images of the bitmasked data to demonstra
 Our specific model works for our bitmasked images - 144x144 pixels and greyscale.
 
 **Reconstruction Example**
-![alt text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun/25.png?raw=true>)
+![Sun 25](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun/25.png?raw=true>)  
 The images on the top row are the input images; the images on the bottom are the reconstructed images. Each image consists of a white sprite surrounded by black.
 
 **Traversal Example**
-![alt text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun traversal.png?raw=true>)
+![Sun Traversal](<https://github.com/jacobyeung/CS-189-Project/blob/main/Reconstruction Examples/Sun traversal.png?raw=true>)  
 The images on the left most column are the inputs; the images on the second to left most column are the reconstructions. The columns afterwards represent a traversal of the latent distribution. We think the traversals could be smoother and more disentangled with hyperparameter tuning and differing model complexities.
 See the Early Project Writeup for more details.
