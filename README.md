@@ -1,5 +1,5 @@
 
-# TEAM AJOYZ: CS-189-Project S Early
+# CS-189-Project
 
 Early project pulls planet traversal images from Stellarium and contains two data sets. One is a bit mask of the planet. Another is a raw image dataset. We have also added functionalities to generate fourier and convoluted kernel variants of the data.
 
@@ -50,6 +50,8 @@ An example model is included inside this repository, described at the bottom of 
      <td>Object Specific Mask Images (Jupiter)</td>
   </tr>
  </table>
+
+Inside ``Raw Images/`` is an example output from running ``src/process.py`` on a collection of 25000 images taken from Stellarium. It contains all the outputs described in the write up, shown in the images above, and the provided helper functions can be run on this sample data.
 
 ## About Our Model
 
