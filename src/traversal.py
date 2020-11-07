@@ -3,7 +3,7 @@ import torchvision
 from torchvision.utils import save_image
 import numpy as np
 import os
-import cnn
+import VAE
 
 """
 Creates traversal of latent space by linearly changing the mean of latent distributions
@@ -70,7 +70,7 @@ def traverse(model, pixels, file_path):
 
 
 def trav(model_name):
-    model = cnn.CNN().to(device)
+    model = VAE.VAE().to(device)
     model.load_state_dict(torch.load(
         './Example Models/' + model_name + '.pt', map_location=lambda storage, loc: storage))
     traverse(model, pixels, "Reconstruction Examples/" +
