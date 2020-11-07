@@ -31,7 +31,7 @@ Next:
 
 | ![Raw dataset image](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/image/0.png?raw=true>)      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Dataset bitmask](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw%20Images/object_bit_mask/0.png?raw=true>)       |
 |:--:|
-|Dataset Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask |
+|Dataset Image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bit Mask Images|
 
 ## About Our Model:
 
