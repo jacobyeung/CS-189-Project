@@ -27,4 +27,8 @@ Instructions
   - Note*** Due to the way numpy stores complex numbers the fourier version of these files takes up a lot of space (~8GB per file) so be warned.
   - The cleaned data in the .npz files can be downloaded from https://drive.google.com/drive/folders/1TFwxn_xk9RVnpkibTUW9kg-ef_b5GC0S?usp=sharing. This data was created using src/helper.py with an expand argument of 4.
 
+
+
+About Our Models:
+Beta-VAE: https://arxiv.org/abs/1804.03599
 See Early Project Writeup for more details. 
