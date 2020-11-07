@@ -17,4 +17,4 @@ def select_image(planet):
                          10000, 12500, 15000, 17500, 20000, 22500]]
 
     np.save(os.path.abspath(os.getcwd() +
-                            '/src/image_sample_' + planet + '.npz'), data)
+                            '/src/image_sample_' + planet + '.npy'), data)

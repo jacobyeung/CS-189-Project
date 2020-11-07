@@ -13,7 +13,7 @@ planet: change to name of solar system object
 """
 
 planet = 'sun'
-root = os.path.abspath(os.getcwd() + '/src/image_sample_' + planet + '.npz')
+root = os.path.abspath(os.getcwd() + '/src/image_sample_' + planet + '.npy')
 pixels = np.load(root)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
