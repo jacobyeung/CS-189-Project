@@ -1,3 +1,5 @@
+#scripts/helper functions to augment data
+
 import numpy as np
 import argparse, os, sys
 import cv2
@@ -15,6 +17,7 @@ def save_data_matrix(planet, output_masks, output_dir):
 	np.savez(output_filename, data=np.array(output_masks))
 
 
+#simply append all bit masks for the planet into a big numpy matrix, flattened images
 def create_data_matrix_planets(planet, mask_directory, output_dir='output'):
 	idx = 0
 
@@ -39,6 +42,10 @@ def create_data_matrix_planets(planet, mask_directory, output_dir='output'):
 
 	save_data_matrix(planet, output_masks, output_dir)
 
+
+#simply append all bit masks for the planet into a big numpy matrix, flattened images
+#runs a convolution kernel on each bit mask, kernel is set inside variable k
+#current kernel is a simple expansion kernel, expands every point from 1 x 1 to expand_amount x expand_amount
 def create_data_matrix_planets_expanded(planet, mask_directory, output_dir='output', expand_amount=4,):
 	idx = 0
 
