@@ -34,6 +34,10 @@ Next:
 
 ![alt text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw Images/image/0.png?raw=true>)
 
+**Bit Masked Image**
+
+![alt_text](<https://github.com/jacobyeung/CS-189-Project/blob/main/Raw Images/object_bit_mask/1.png?raw=true>)
+
 ## About Our Model:
 
 Tutorial - What is a variational autoencoder?: https://jaan.io/what-is-variational-autoencoder-vae-tutorial/
