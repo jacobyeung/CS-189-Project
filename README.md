@@ -68,7 +68,7 @@ Our specific model works for our bitmasked images - 144x144 pixels and greyscale
 
 ### Instructions to Run Model
 
-1. Change `fpaths` in `src/train_basic.py` for planets to train our model on
+1. (Optional) Change `fpaths` in `src/train_basic.py` for planets to train the model on
 2. Run `src/train_basic.py`
 
 **Reconstruction Example**
