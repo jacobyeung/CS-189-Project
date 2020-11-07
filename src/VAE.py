@@ -3,8 +3,13 @@ import torch.nn as nn
 from torchsummary import summary
 
 
-class CNN(nn.Module):
-    """Convolutional Variational Autoencoder"""
+class VAE(nn.Module):
+    """
+    Convolutional Beta Variational Autoencoder
+    Refer to README for sources and more information about beta-VAES
+
+    Model encodes 10 latent distributions.
+    """
 
     def __init__(self):
         super().__init__()

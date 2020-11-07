@@ -4,15 +4,21 @@ from torchvision.utils import save_image
 import numpy as np
 import os
 import cnn
-root = os.path.abspath(os.getcwd() + '/src/image_sample_sun.npy')
+
+"""
+Creates traversal of latent space by linearly changing the mean of latent distributions
+across a preset range of values -3 to 3.
+
+planet: change to name of solar system object
+"""
+
+planet = 'sun'
+root = os.path.abspath(os.getcwd() + '/src/image_sample_' + planet + '.npz')
 pixels = np.load(root)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 torch.manual_seed(4321)
 np.random.seed(4321)
-# model = reimp.ReImp().to(device)
-# model.load_state_dict(torch.load(
-#     './src/model_version/contiguous_C10.pt', map_location=lambda storage, loc: storage))
 
 
 def traverse(model, pixels, file_path):

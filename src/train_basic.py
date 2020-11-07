@@ -13,8 +13,11 @@ import numpy as np
 import os
 from PIL import Image
 from csv import writer
+import traversal
 import visualization
-import cnn
+import VAE
+import select_image
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--gamma1', default=1000, type=int,
                     help="Lower gamma for KL divergence")
@@ -32,19 +35,13 @@ lr = 0.0005
 batch_size = 64
 gamma1 = args['gamma1']
 gamma2 = args['gamma2']
-# C = args['C_max']
-# C = 10 / np.log(2)
 C = np.arange(26)
-#C = np.array([25])
 C = C/np.log(2)
 C = C / 100
 epochs = args['epochs']
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print(torch.cuda.is_available())
-
-
-# data = data[:100000]
 
 
 class CustomDataset(Dataset):
@@ -128,6 +125,14 @@ def path_maker(fpath):
     Path("outputs/" + fpath).mkdir(exist_ok=True)
 
 
+"""
+Trains beta VAEs on the below planets.
+Main goal is to reconstruct images to show viability of data set for
+image to image models.
+Auxiliary goal is to develop traversals of the latent distributions.
+
+fpaths: names of planets to reconstruct
+"""
 fpaths = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]
 for fpath in fpaths:
     path_maker(fpath)
@@ -169,7 +174,7 @@ for fpath in fpaths:
     val_kld = []
     train_loss = []
     val_loss = []
-    model = cnn.CNN().to(device)
+    model = VAE.VAE().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     path_maker(fpath)
     count = 0
@@ -205,5 +210,6 @@ for fpath in fpaths:
              train_kld=train_kld, val_total=val_total, val_bce=val_bce, val_kld=val_kld)
     torch.save(model.state_dict(),
                "./model_version/" + fpath + ".pt")
-    # traversal.trav(fpath)
+    select_image.select_image(fpath)
+    traversal.trav(fpath)
     visualization.visualization(fpath)

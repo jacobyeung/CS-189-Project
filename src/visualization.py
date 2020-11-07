@@ -2,6 +2,10 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+"""
+Creates a figure of the different losses
+"""
+
 
 def visualization(file_name):
     pixels = np.load(file_name + ".npz")
