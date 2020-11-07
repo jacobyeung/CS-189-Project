@@ -6,9 +6,13 @@ from torchsummary import summary
 class VAE(nn.Module):
     """
     Convolutional Beta Variational Autoencoder
-    Refer to README for sources and more information about beta-VAES
+    Refer to README for sources and more information about Beta-VAES
 
     Model encodes 10 latent distributions.
+    Model consists of:
+        - 3 downsizing convolutional layers
+        - 4 linear layers (2 hidden)
+        - 3 upsizing convolutional layers
     """
 
     def __init__(self):
@@ -25,29 +29,36 @@ class VAE(nn.Module):
         )
 
         self.enclin_layer = nn.Sequential(
-            nn.Linear(800, 400),
+            nn.Linear(800, 400),  # B, 400
             nn.ReLU(),
-            nn.Linear(400, 20)
+            nn.Linear(400, 20)  # B, 20
         )
         self.declin_layer = nn.Sequential(
-            nn.Linear(10, 400),  # B, 32, 5, 320
+            nn.Linear(10, 400),  # B, 400
             nn.ReLU(),
-            nn.Linear(400, 800)
+            nn.Linear(400, 800)  # B, 800
         )
         self.upsize_layer = nn.Sequential(
-            nn.ConvTranspose2d(32, 32, 3, stride=3, padding=1),
+            nn.ConvTranspose2d(32, 32, 3, stride=3,
+                               padding=1),  # B, 32, 13, 13
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 32, 4, stride=3, padding=2),
+            nn.ConvTranspose2d(32, 32, 4, stride=3,
+                               padding=2),  # B, 32, 36, 36
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 1, 6, stride=4, padding=1)
+            nn.ConvTranspose2d(32, 1, 6, stride=4,
+                               padding=1)  # B, 32, 144, 144
         )
 
-    def downsize(self, x):
+    def encode(self, x):
         x = self.downsize_layer(x)
+        x = x.view(-1, 5 * 5 * 32)
+        x = self.enclin_layer(x)
         return x
 
-    def linear(self, x):
-        x = self.enclin_layer(x)
+    def decode(self, x):
+        x = self.upsize_layer(x)
+        x = x.view(-1, 32, 5, 5)
+        x = self.upsize_layer(x)
         return x
 
     def upsize(self, x):
@@ -61,14 +72,10 @@ class VAE(nn.Module):
         return sample
 
     def forward(self, x):
-        x = self.downsize(x)
-        x = x.view(-1, 5 * 5 * 32)
-        x = self.linear(x)
+        x = self.encode(x)
         mu, logvar = x[:, :x.shape[1] // 2], x[:, x.shape[1] // 2:]
         sample = self.reparameterize(mu, logvar)
-        x = self.declin_layer(sample)
-        x = x.view(-1, 32, 5, 5)
-        x = self.upsize(x)
+        x = self.decode(x)
         return x, mu, logvar
 
     def final_loss(self, reconstruction, x, mu, logvar, gamma, C):

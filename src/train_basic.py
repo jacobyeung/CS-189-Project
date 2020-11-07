@@ -2,7 +2,6 @@ from pathlib import Path
 import torch
 import torchvision
 import torch.optim as optim
-import argparse
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -18,27 +17,13 @@ import visualization
 import VAE
 import select_image
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--gamma1', default=1000, type=int,
-                    help="Lower gamma for KL divergence")
-parser.add_argument('--gamma2', default=1000, type=int,
-                    help="Upper gamma for KL divergence")
-parser.add_argument('--C_max', default=25, type=int,
-                    help="Capacity bottleneck")
-parser.add_argument('-e', '--epochs', default=26, type=int,
-                    help='number of epochs to train VAE for')
-parser.add_argument('-f', '--ff', help="Dummy arg")
-args = vars(parser.parse_args())
-
 # Some hyperparameters
 lr = 0.0005
 batch_size = 64
-gamma1 = args['gamma1']
-gamma2 = args['gamma2']
-C = np.arange(26)
+C = np.arange(26)  # Creates C values to constrain the KL divergence to
 C = C/np.log(2)
 C = C / 100
-epochs = args['epochs']
+epochs = 1
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print(torch.cuda.is_available())
